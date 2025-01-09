@@ -2,5 +2,10 @@ spring:
   application:
     name: spring-kotlin-mongo
 
+  data:
+    mongodb:
+      uri: mongodb+srv://abayu:yNZpt9q6Clm0HniN@usercluster.lgnjm.mongodb.net/?retryWrites=true&w=majority&appName=usercluster
+      database: users
+
 server:
   port: 1200
