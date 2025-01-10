@@ -24,7 +24,7 @@ class UserServiceImpl : UserService {
     override fun getUserDetail(id: String): ResponseEntity<User> {
         val user = userRepository.findById(id)
 
-        return if (null != user) ResponseEntity.ok(user.get()) else ResponseEntity.notFound().build()
+        return if (user.isEmpty) ResponseEntity.notFound().build() else return ResponseEntity.ok(user.get())
     }
 
     override fun deleteUser(id: String) {
