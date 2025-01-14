@@ -5,11 +5,14 @@ import com.abayu.yuhu.springkotlinmongo.dto.ApiResult
 import com.abayu.yuhu.springkotlinmongo.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class UserServiceImpl : UserService {
+class UserServiceImpl : UserService, UserDetailsService {
 
     @Autowired
     private lateinit var userRepository: UserRepository
@@ -43,5 +46,15 @@ class UserServiceImpl : UserService {
         oldUser.profession = user.profession
 
         return ResponseEntity.ok(userRepository.save(oldUser))
+    }
+
+    override fun findUserByUsername(username: String): UserDetails {
+        val user: User = userRepository.findUserByUsername(username)
+            ?:throw UsernameNotFoundException("User $username not found")
+        return org.springframework.security.core.userdetails.User(user.username.toString(), user.password, ArrayList())
+    }
+
+    override fun loadUserByUsername(username: String?): UserDetails {
+        return findUserByUsername(username.toString())
     }
 }
